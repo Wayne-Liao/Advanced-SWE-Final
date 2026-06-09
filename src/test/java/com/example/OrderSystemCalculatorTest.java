@@ -1,17 +1,26 @@
 package com.example;
 
+import org.junit.Before; // 新增這行
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class OrderSystemCalculatorTest {
+
+    // 重構：將計算機宣告為類別層級的屬性
+    private OrderSystemCalculator calc;
+
+    // 重構：使用 @Before，讓 JUnit 在「每一個」 @Test 執行前，都會自動跑一次這段初始化
+    @Before
+    public void setUp() {
+        calc = new OrderSystemCalculator();
+    }
 
     // ==========================================
     // 功能一：基本單點計價測試 (無套餐、無會員)
     // ==========================================
     @Test
     public void testBasicSingleItems() {
-        OrderSystemCalculator calc = new OrderSystemCalculator();
-        
+        // 不用再自己 new 物件了，直接使用 calc
         // 只有主餐 (2份 * 100 = 200)
         assertEquals(200, calc.calculateTotal(2, 0, ""));
         
@@ -24,8 +33,6 @@ public class OrderSystemCalculatorTest {
     // ==========================================
     @Test
     public void testComboLogic() {
-        OrderSystemCalculator calc = new OrderSystemCalculator();
-        
         // 剛好湊成1組套餐
         assertEquals(120, calc.calculateTotal(1, 1, null));
         
@@ -41,8 +48,6 @@ public class OrderSystemCalculatorTest {
     // ==========================================
     @Test
     public void testMemberDiscount() {
-        OrderSystemCalculator calc = new OrderSystemCalculator();
-        
         // 1組套餐(120) * 會員9折 = 108
         assertEquals(108, calc.calculateTotal(1, 1, "Member"));
         
@@ -50,8 +55,8 @@ public class OrderSystemCalculatorTest {
         assertEquals(180, calc.calculateTotal(2, 0, "Member"));
         
         // 測試大小寫或錯誤會員碼，不該打折 (預期維持原價 120)
-        assertEquals(120, calc.calculateTotal(1, 1, "member")); // 大小寫不同
-        assertEquals(120, calc.calculateTotal(1, 1, "VIP"));    // 無效代碼
+        assertEquals(120, calc.calculateTotal(1, 1, "member")); 
+        assertEquals(120, calc.calculateTotal(1, 1, "VIP"));    
     }
 
     // ==========================================
@@ -61,21 +66,18 @@ public class OrderSystemCalculatorTest {
     // 測試防呆：數量不能同時 <= 0
     @Test(expected = IllegalAmountException.class)
     public void testException_ZeroAmount() {
-        OrderSystemCalculator calc = new OrderSystemCalculator();
-        calc.calculateTotal(0, 0, "Member"); // 這裡應該要拋出例外
+        calc.calculateTotal(0, 0, "Member"); // 預期拋出例外
     }
 
     // 測試防呆：單一品項不能超過 50
     @Test(expected = IllegalAmountException.class)
     public void testException_ExceedLimit() {
-        OrderSystemCalculator calc = new OrderSystemCalculator();
-        calc.calculateTotal(51, 10, null); // 51份主餐，應該要拋出例外
+        calc.calculateTotal(51, 10, null); // 預期拋出例外
     }
 
     // 測試極限值：剛好 50 份 (合法邊界，不該拋出例外)
     @Test
     public void testBoundary_ExactlyFifty() {
-        OrderSystemCalculator calc = new OrderSystemCalculator();
         // 50組套餐 (50 * 120 = 6000)
         assertEquals(6000, calc.calculateTotal(50, 50, "NORMAL"));
     }
