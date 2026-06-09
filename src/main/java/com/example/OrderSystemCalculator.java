@@ -54,10 +54,12 @@ public class OrderSystemCalculator {
      * 獨立的驗證邏輯：確保訂單數量合法
      */
     private void validateOrderAmounts(int mainDishCount, int drinkCount) {
-        if (mainDishCount <= 0 && drinkCount <= 0) {
+        if (mainDishCount == 0 && drinkCount == 0) {
             throw new IllegalAmountException("訂購數量必須大於0");
         }
-        
+        if (mainDishCount < 0 || drinkCount < 0) {
+            throw new IllegalAmountException("訂購數量必須大於0");
+        }
         if (mainDishCount > MAX_ORDER_LIMIT || drinkCount > MAX_ORDER_LIMIT) {
             throw new IllegalAmountException("訂購數量超過上限，請聯絡客服訂餐");
         }
