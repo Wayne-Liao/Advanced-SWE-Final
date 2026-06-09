@@ -1,5 +1,5 @@
 步驟：
-git config --global user.name "Wayne-Liao"
+git config --global user.name "Wayne-Liao"/n
 git config --global user.email "你的信箱@example.com"
 
 cd C:\Users\user\eclipse-workspace\Advanced-SWE-Final
