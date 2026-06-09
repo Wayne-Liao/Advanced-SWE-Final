@@ -69,7 +69,7 @@ public class OrderSystemCalculatorTest {
         calc.calculateTotal(0, 0, "Member"); // 預期拋出例外
     }
 
-    // 測試防呆：單一品項不能超過 50
+    // 測試防呆：主餐品項超過 50
     @Test(expected = IllegalAmountException.class)
     public void testException_ExceedLimit() {
         calc.calculateTotal(51, 10, null); // 預期拋出例外
@@ -80,5 +80,23 @@ public class OrderSystemCalculatorTest {
     public void testBoundary_ExactlyFifty() {
         // 50組套餐 (50 * 120 = 6000)
         assertEquals(6000, calc.calculateTotal(50, 50, "NORMAL"));
+    }
+    
+    // 測試防呆：主餐數量為負數
+    @Test(expected = IllegalAmountException.class)
+    public void testException_NegativeMainDish() {
+        calc.calculateTotal(-1, 5, null); // 預期拋出例外
+    }
+
+    // 測試防呆：飲料數量為負數
+    @Test(expected = IllegalAmountException.class)
+    public void testException_NegativeDrink() {
+        calc.calculateTotal(5, -1, null); // 預期拋出例外
+    }
+
+    // 測試防呆：飲料品項超過 50
+    @Test(expected = IllegalAmountException.class)
+    public void testException_DrinkExceedLimit() {
+        calc.calculateTotal(10, 51, null); // 預期拋出例外
     }
 }
