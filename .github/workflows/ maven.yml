@@ -1,0 +1,26 @@
+name: Java CI with Maven
+
+# 觸發條件：當程式碼推送到 main 分支，或是發起 Pull Request 時啟動
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu 雲端環境
+
+    steps:
+    - name: 取得程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設定 Java 環境
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: 執行 Maven 編譯與單元測試
+      run: mvn -B test --file pom.xml
